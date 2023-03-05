@@ -35,8 +35,10 @@ test_that("newton and bfgs outputs coincide on logit model", {
 test_that("newton and bfgs outputs coincide on binomial model", {
   n_obs <- 32
   n_pred <- 4
-  data <- simulate_data(n_obs, n_pred, model = "logit", seed = 1918,
-                        option = list(n_trial=1:n_obs))
+  data <- simulate_data(n_obs, n_pred,
+    model = "logit", seed = 1918,
+    option = list(n_trial = 1:n_obs)
+  )
   design <- data$design
   outcome <- data$outcome
   via_newton_out <- hiper_glm(design, outcome, model = "logit")
@@ -50,11 +52,13 @@ test_that("newton and bfgs outputs coincide on binomial model", {
   ))
 })
 
-test_that("Bernoulli and binomial with n_trial=1 have matching output",{
+test_that("Bernoulli and binomial with n_trial=1 have matching output", {
   n_obs <- 32
   n_pred <- 4
-  data <- simulate_data(n_obs, n_pred, model = "logit", seed = 1918,
-                        option = list(n_trial=rep(1,n_obs)))
+  data <- simulate_data(n_obs, n_pred,
+    model = "logit", seed = 1918,
+    option = list(n_trial = rep(1, n_obs))
+  )
   design <- data$design
   outcome <- data$outcome
   via_newton_out_binary <- hiper_glm(design, outcome, model = "logit")

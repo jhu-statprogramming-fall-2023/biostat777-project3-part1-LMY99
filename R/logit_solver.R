@@ -1,12 +1,11 @@
 logit_log_likelihood <- function(coef, design, outcome) {
   linear_score <- design %*% coef
-  if(is.numeric(outcome)){
-  return(sum(
-    outcome * -log1p(exp(-linear_score)) +
-      (1 - outcome) * -log1p(exp(linear_score))
-  ))
-  }
-  else if(is.list(outcome)){
+  if (is.numeric(outcome)) {
+    return(sum(
+      outcome * -log1p(exp(-linear_score)) +
+        (1 - outcome) * -log1p(exp(linear_score))
+    ))
+  } else if (is.list(outcome)) {
     return(sum(
       outcome$n_success * -log1p(exp(-linear_score)) +
         (outcome$n_trial - outcome$n_success) * -log1p(exp(linear_score))
@@ -16,14 +15,13 @@ logit_log_likelihood <- function(coef, design, outcome) {
 logit_loglike_grad <- function(coef, design, outcome) {
   linear_score <- design %*% coef
   mean <- drop(1 / (1 + exp(-linear_score)))
-  if(is.numeric(outcome)){
-  return(drop(
-    t(design) %*% (outcome - mean)
-  ))
-  }
-  else if(is.list(outcome)){
+  if (is.numeric(outcome)) {
     return(drop(
-      t(design) %*% (outcome$n_success - mean*outcome$n_trial)
+      t(design) %*% (outcome - mean)
+    ))
+  } else if (is.list(outcome)) {
+    return(drop(
+      t(design) %*% (outcome$n_success - mean * outcome$n_trial)
     ))
   }
 }
@@ -31,12 +29,11 @@ logit_loglike_hessian <- function(coef, design, outcome) {
   linear_score <- design %*% coef
   mean <- drop(1 / (1 + exp(-linear_score)))
   mean_1m <- drop(1 / (1 + exp(linear_score)))
-  if(is.numeric(outcome)){
-  return(
-    -t(design) %*% diag(mean * mean_1m) %*% design
-  )
-  }
-  else if(is.list(outcome)){
+  if (is.numeric(outcome)) {
+    return(
+      -t(design) %*% diag(mean * mean_1m) %*% design
+    )
+  } else if (is.list(outcome)) {
     return(
       -t(design) %*% diag(mean * mean_1m * outcome$n_trial) %*% design
     )

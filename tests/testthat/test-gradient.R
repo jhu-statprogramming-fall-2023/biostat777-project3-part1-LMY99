@@ -67,14 +67,16 @@ testthat::test_that(
   {
     n_obs <- 32
     n_pred <- 4
-    data <- simulate_data(n_obs, n_pred, model = "logit", seed = 150,
-                          option=list(n_trial=1:n_obs))
+    data <- simulate_data(n_obs, n_pred,
+      model = "logit", seed = 150,
+      option = list(n_trial = 1:n_obs)
+    )
     design <- data$design
     outcome <- data$outcome
     coef_true <- data$coef_true
     analytic_grad <- logit_loglike_grad(coef_true, design, outcome)
     numeric_grad <- approx_grad(logit_log_likelihood, coef_true,
-                                design = design, outcome = outcome
+      design = design, outcome = outcome
     )
     testthat::expect_true(are_all_close(analytic_grad, numeric_grad))
   }
@@ -85,8 +87,10 @@ testthat::test_that(
   {
     n_obs <- 32
     n_pred <- 4
-    data <- simulate_data(n_obs, n_pred, model = "logit", seed = 340,
-                          option=list(n_trial=1:n_obs))
+    data <- simulate_data(n_obs, n_pred,
+      model = "logit", seed = 340,
+      option = list(n_trial = 1:n_obs)
+    )
     design <- data$design
     outcome <- data$outcome
     coef_true <- data$coef_true
@@ -116,18 +120,20 @@ testthat::test_that(
   {
     n_obs <- 32
     n_pred <- 4
-    data <- simulate_data(n_obs, n_pred, model = "logit", seed = 150,
-                          option=list(n_trial=rep(1, n_obs)))
+    data <- simulate_data(n_obs, n_pred,
+      model = "logit", seed = 150,
+      option = list(n_trial = rep(1, n_obs))
+    )
     design <- data$design
     outcome <- data$outcome
     coef_true <- data$coef_true
     analytic_grad_binom <- logit_loglike_grad(coef_true, design, outcome)
     numeric_grad_binom <- approx_grad(logit_log_likelihood, coef_true,
-                                design = design, outcome = outcome
+      design = design, outcome = outcome
     )
     analytic_grad_binary <- logit_loglike_grad(coef_true, design, outcome$n_success)
     numeric_grad_binary <- approx_grad(logit_log_likelihood, coef_true,
-                                      design = design, outcome = outcome$n_success
+      design = design, outcome = outcome$n_success
     )
     testthat::expect_true(are_all_close(analytic_grad_binom, analytic_grad_binary))
     testthat::expect_true(are_all_close(numeric_grad_binom, numeric_grad_binary))
