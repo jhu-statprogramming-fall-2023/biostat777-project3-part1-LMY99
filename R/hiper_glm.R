@@ -1,6 +1,6 @@
 #' @export
 hiper_glm <- function(design, outcome, model = "linear", option = list()) {
-  support_model <- c("linear")
+  support_model <- c("linear", "logit")
   if (!(model %in% support_model)) {
     stop(sprintf("Model %s not supported.", model))
   }
@@ -12,6 +12,12 @@ hiper_glm <- function(design, outcome, model = "linear", option = list()) {
       hglm_out$mle_solver <- "PSEUDO_INVERSE"
     } else if (option$mle_solver == "BFGS") {
       hglm_out$coefficients <- lm_bfgs(design, outcome)
+      hglm_out$mle_solver <- "BFGS"
+    }
+  }
+  else if (model == "logit"){
+    if(is.null(option$mle_solver) || option$mle_solver == "BFGS"){
+      hglm_out$coefficients <- logit_bfgs(design, outcome)
       hglm_out$mle_solver <- "BFGS"
     }
   }
