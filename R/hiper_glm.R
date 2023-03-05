@@ -15,12 +15,12 @@ hiper_glm <- function(design, outcome, model = "linear", option = list()) {
       hglm_out$mle_solver <- "BFGS"
     }
   } else if (model == "logit") {
-    if (is.null(option$mle_solver) || option$mle_solver == "BFGS") {
-      hglm_out$coefficients <- logit_bfgs(design, outcome)
-      hglm_out$mle_solver <- "BFGS"
-    } else if (option$mle_solver == "NEWTON") {
+    if (is.null(option$mle_solver) || option$mle_solver == "NEWTON") {
       hglm_out$coefficients <- logit_newton(design, outcome, option = option)
       hglm_out$mle_solver <- "NEWTON"
+    } else if (option$mle_solver == "BFGS") {
+      hglm_out$coefficients <- logit_bfgs(design, outcome)
+      hglm_out$mle_solver <- "BFGS"
     }
   }
   return(hglm_out)
