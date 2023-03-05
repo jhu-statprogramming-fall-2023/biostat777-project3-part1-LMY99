@@ -56,9 +56,9 @@ logit_bfgs <- function(design, outcome) {
 logit_newton <- function(design, outcome, option = list()) {
   num_predictor <- ncol(design)
   coef <- rep(0, num_predictor)
-  n_max <- ifelse(is.null(option$n_iter), 10, option$n_iter)
-  abs_tol <- ifelse(is.null(option$abs_tol), 1e-4, option$abs_tol)
-  rel_tol <- ifelse(is.null(option$rel_tol), 1e-4, option$rel_tol)
+  n_max <- ifelse(is.null(option$n_iter), 20, option$n_iter)
+  abs_tol <- ifelse(is.null(option$abs_tol), 1e-6, option$abs_tol)
+  rel_tol <- ifelse(is.null(option$rel_tol), 1e-6, option$rel_tol)
   for (i in 1:n_max) {
     hessian <- logit_loglike_hessian(coef, design, outcome)
     grad <- logit_loglike_grad(coef, design, outcome)
