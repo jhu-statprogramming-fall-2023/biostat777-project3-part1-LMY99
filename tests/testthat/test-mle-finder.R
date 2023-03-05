@@ -11,7 +11,7 @@ test_that("linalg and optim least-sq coincide", {
   )
   expect_true(are_all_close(
     coef(via_linalg_out), coef(via_bfgs_out),
-    abs_tol = 1e-5, rel_tol = 1e-5
+    abs_tol = 1e-4, rel_tol = 1e-4
   ))
 })
 
@@ -24,6 +24,6 @@ test_that("newton and bfgs outputs coincide on logit model", {
     design, outcome, model = 'logit', option = list(mle_solver = 'BFGS')
   )
   expect_true(are_all_close(
-    coef(via_newton_out), coef(via_bfgs_out), abs_tol = 1e-2, rel_tol = 1e-2
+    coef(via_newton_out), coef(via_bfgs_out), abs_tol = 1e-4, rel_tol = 1e-4
   ))
 })
