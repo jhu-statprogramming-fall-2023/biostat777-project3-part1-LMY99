@@ -112,7 +112,7 @@ testthat::test_that(
 )
 
 testthat::test_that(
-  "Bernoulli model and binomial model with n_trial=1 match",
+  "Bernoulli model and binomial model with n_trial=1 have matching derivatives",
   {
     n_obs <- 32
     n_pred <- 4
