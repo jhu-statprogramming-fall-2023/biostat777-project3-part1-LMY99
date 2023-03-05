@@ -30,13 +30,25 @@ logit_bfgs <- function(design, outcome){
                                control=list(fnscale=-1))
   return(optim_result$par)
 }
-logit_newton <- function(design, outcome, option=list(n_iter=50)){
+logit_newton <- function(design, outcome, option=list()){
   num_predictor <- ncol(design)
   coef <- rep(0, num_predictor)
-  for(i in 1:option$n_iter){
+  n_max <- ifelse(is.null(option$n_iter), 10, option$n_iter)
+  abs_tol <- ifelse(is.null(option$abs_tol), 1e-4, option$abs_tol)
+  rel_tol <- ifelse(is.null(option$rel_tol), 1e-4, option$rel_tol)
+  for(i in 1:n_max){
     hessian <- logit_loglike_hessian(coef, design, outcome)
     grad <- logit_loglike_grad(coef, design, outcome)
-    coef <- coef - drop(solve(hessian, grad))
+    coef_new <- coef - drop(solve(hessian, grad))
+    loglike_old <- logit_log_likelihood(coef, design, outcome)
+    loglike_new <- logit_log_likelihood(coef_new, design, outcome)
+    if(abs(loglike_new-loglike_old)<=abs_tol &&
+       abs(loglike_new-loglike_old)<=rel_tol*max(loglike_old,loglike_new)){
+      break
+    }
+    else{
+      coef <- coef_new
+    }
   }
   return(coef)
 }

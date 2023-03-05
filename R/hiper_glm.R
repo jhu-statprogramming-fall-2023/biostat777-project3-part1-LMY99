@@ -21,7 +21,7 @@ hiper_glm <- function(design, outcome, model = "linear", option = list()) {
       hglm_out$mle_solver <- "BFGS"
     }
     else if(option$mle_solver == "NEWTON"){
-      hglm_out$coefficients <- logit_newton(design, outcome)
+      hglm_out$coefficients <- logit_newton(design, outcome, option=option)
       hglm_out$mle_solver <- "NEWTON"
     }
   }
