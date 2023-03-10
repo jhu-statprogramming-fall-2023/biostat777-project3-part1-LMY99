@@ -1,3 +1,7 @@
+logit <- function(z){
+  return(1/(1+exp(-z)))
+}
+
 logit_log_likelihood <- function(coef, design, outcome) {
   linear_score <- design %*% coef
   if (is.numeric(outcome)) {
@@ -14,7 +18,7 @@ logit_log_likelihood <- function(coef, design, outcome) {
 }
 logit_loglike_grad <- function(coef, design, outcome) {
   linear_score <- design %*% coef
-  mean <- drop(1 / (1 + exp(-linear_score)))
+  mean <- drop(logit(linear_score))
   if (is.numeric(outcome)) {
     return(drop(
       t(design) %*% (outcome - mean)
@@ -27,8 +31,8 @@ logit_loglike_grad <- function(coef, design, outcome) {
 }
 logit_loglike_hessian <- function(coef, design, outcome) {
   linear_score <- design %*% coef
-  mean <- drop(1 / (1 + exp(-linear_score)))
-  mean_1m <- drop(1 / (1 + exp(linear_score)))
+  mean <- drop(logit(linear_score))
+  mean_1m <- drop(logit(-linear_score))
   if (is.numeric(outcome)) {
     return(
       -t(design) %*% diag(mean * mean_1m) %*% design
