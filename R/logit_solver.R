@@ -1,5 +1,5 @@
-logit <- function(z){
-  return(1/(1+exp(-z)))
+logit <- function(z) {
+  return(1 / (1 + exp(-z)))
 }
 are_all_close <- function(v, w, abs_tol = 1e-6, rel_tol = 1e-6) {
   abs_diff <- abs(v - w)
