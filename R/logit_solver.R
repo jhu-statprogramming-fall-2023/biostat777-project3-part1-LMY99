@@ -1,6 +1,12 @@
 logit <- function(z){
   return(1/(1+exp(-z)))
 }
+are_all_close <- function(v, w, abs_tol = 1e-6, rel_tol = 1e-6) {
+  abs_diff <- abs(v - w)
+  are_all_within_atol <- all(abs_diff < abs_tol)
+  are_all_within_rtol <- all(abs_diff < rel_tol * pmax(abs(v), abs(w)))
+  return(are_all_within_atol && are_all_within_rtol)
+}
 
 logit_log_likelihood <- function(coef, design, outcome) {
   linear_score <- design %*% coef
@@ -66,8 +72,7 @@ logit_newton <- function(design, outcome, option = list()) {
     coef_new <- coef - drop(solve(hessian, grad))
     loglike_old <- logit_log_likelihood(coef, design, outcome)
     loglike_new <- logit_log_likelihood(coef_new, design, outcome)
-    if (abs(loglike_new - loglike_old) <= abs_tol &&
-      abs(loglike_new - loglike_old) <= rel_tol * max(loglike_old, loglike_new)) {
+    if (are_all_close(loglike_new, loglike_old, abs_tol, rel_tol)) {
       break
     } else {
       coef <- coef_new
