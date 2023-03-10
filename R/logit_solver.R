@@ -49,17 +49,6 @@ logit_loglike_hessian <- function(coef, design, outcome) {
     )
   }
 }
-logit_bfgs <- function(design, outcome) {
-  num_predictor <- ncol(design)
-  init_coef <- rep(0, num_predictor)
-  optim_result <- stats::optim(init_coef, logit_log_likelihood,
-    logit_loglike_grad,
-    design = design, outcome = outcome,
-    method = "BFGS",
-    control = list(fnscale = -1)
-  )
-  return(optim_result$par)
-}
 logit_newton <- function(design, outcome, option = list()) {
   num_predictor <- ncol(design)
   coef <- rep(0, num_predictor)
