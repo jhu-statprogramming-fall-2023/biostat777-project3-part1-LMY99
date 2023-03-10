@@ -13,6 +13,8 @@ hiper_glm <- function(design, outcome, model = "linear", option = list()) {
     } else if (option$mle_solver == "BFGS") {
       hglm_out$coefficients <- lm_bfgs(design, outcome)
       hglm_out$mle_solver <- "BFGS"
+    } else {
+      stop("MLE solver must be PINV or BFGS.")
     }
   } else if (model == "logit") {
     if (is.null(option$mle_solver) || option$mle_solver == "NEWTON") {
@@ -21,6 +23,8 @@ hiper_glm <- function(design, outcome, model = "linear", option = list()) {
     } else if (option$mle_solver == "BFGS") {
       hglm_out$coefficients <- logit_bfgs(design, outcome)
       hglm_out$mle_solver <- "BFGS"
+    } else {
+      stop("MLE solver must be NEWTON or BFGS.")
     }
   }
   return(hglm_out)
