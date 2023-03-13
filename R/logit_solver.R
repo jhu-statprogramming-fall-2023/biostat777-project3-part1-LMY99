@@ -49,10 +49,30 @@ logit_loglike_hessian <- function(coef, design, outcome) {
     )
   }
 }
-logit_newton_step <- function(current_coef, design, outcome){
+logit_newton_step <- function(current_coef, design, outcome,
+                              option = list()){
+  if(is.null(option$newton_solver) || option$newton_solver=='QR'){
+    linear_score <- design %*% current_coef
+    mean <- drop(logit(linear_score))
+    mean_1m <- drop(logit(-linear_score))
+    if (is.numeric(outcome)){
+      v <- mean * mean_1m
+      response <- linear_score + (outcome - mean)/v
+    }
+    else if(is.list(outcome)){
+      v <- mean * mean_1m * outcome$n_trial
+      response <- linear_score + (outcome$n_success - mean*outcome$n_trial)/v
+    }
+    design_mod <- diag(sqrt(v)) %*% design
+    outcome_mod <- diag(sqrt(v)) %*% response
+    new_coef <- qr.solve(design_mod, outcome_mod)
+
+  } else if(option$newton_solver=='LU'){
   hessian <- logit_loglike_hessian(current_coef, design, outcome)
   grad <- logit_loglike_grad(current_coef, design, outcome)
-  new_coef <- current_coef - drop(solve(hessian, grad))
+  change <- drop(solve(hessian, grad))
+  new_coef <- current_coef - change
+  }
   return(new_coef)
 }
 logit_newton <- function(design, outcome, option = list()) {
@@ -62,7 +82,7 @@ logit_newton <- function(design, outcome, option = list()) {
   abs_tol <- ifelse(is.null(option$abs_tol), 1e-6, option$abs_tol)
   rel_tol <- ifelse(is.null(option$rel_tol), 1e-6, option$rel_tol)
   for (i in 1:n_max) {
-    coef_new <- logit_newton_step(coef, design, outcome)
+    coef_new <- logit_newton_step(coef, design, outcome, option)
     loglike_old <- logit_log_likelihood(coef, design, outcome)
     loglike_new <- logit_log_likelihood(coef_new, design, outcome)
     if (are_all_close(loglike_new, loglike_old, abs_tol, rel_tol)) {
