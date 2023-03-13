@@ -49,6 +49,12 @@ logit_loglike_hessian <- function(coef, design, outcome) {
     )
   }
 }
+logit_newton_step <- function(current_coef, design, outcome){
+  hessian <- logit_loglike_hessian(current_coef, design, outcome)
+  grad <- logit_loglike_grad(current_coef, design, outcome)
+  new_coef <- current_coef - drop(solve(hessian, grad))
+  return(new_coef)
+}
 logit_newton <- function(design, outcome, option = list()) {
   num_predictor <- ncol(design)
   coef <- rep(0, num_predictor)
@@ -56,9 +62,7 @@ logit_newton <- function(design, outcome, option = list()) {
   abs_tol <- ifelse(is.null(option$abs_tol), 1e-6, option$abs_tol)
   rel_tol <- ifelse(is.null(option$rel_tol), 1e-6, option$rel_tol)
   for (i in 1:n_max) {
-    hessian <- logit_loglike_hessian(coef, design, outcome)
-    grad <- logit_loglike_grad(coef, design, outcome)
-    coef_new <- coef - drop(solve(hessian, grad))
+    coef_new <- logit_newton_step(coef, design, outcome)
     loglike_old <- logit_log_likelihood(coef, design, outcome)
     loglike_new <- logit_log_likelihood(coef_new, design, outcome)
     if (are_all_close(loglike_new, loglike_old, abs_tol, rel_tol)) {
