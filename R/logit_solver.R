@@ -65,7 +65,7 @@ logit_newton_step <- function(current_coef, design, outcome,
     }
     design_mod <- diag(sqrt(v)) %*% design
     outcome_mod <- diag(sqrt(v)) %*% response
-    new_coef <- qr.solve(design_mod, outcome_mod)
+    new_coef <- qr_Eigen(design_mod, outcome_mod)
 
   } else if(option$newton_solver=='LU'){
   hessian <- logit_loglike_hessian(current_coef, design, outcome)
