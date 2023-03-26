@@ -91,7 +91,7 @@ test_that("newton methods have same results with LU and QR solver on logit model
                               option = list(mle_solver = "NEWTON", newton_solver = "QR"))
   via_newton_lu_out <- hiper_glm(
     design, outcome,
-    model = "logit", option = list(mle_solver = "BFGS", newton_solver = "LU")
+    model = "logit", option = list(mle_solver = "NEWTON", newton_solver = "LU")
   )
   expect_true(are_all_close(
     coef(via_newton_qr_out), coef(via_newton_lu_out),
@@ -112,7 +112,7 @@ test_that("newton methods have same results with LU and QR solver on binomial mo
                                  option = list(mle_solver = "NEWTON", newton_solver = "QR"))
   via_newton_lu_out <- hiper_glm(
     design, outcome,
-    model = "logit", option = list(mle_solver = "BFGS", newton_solver = "LU")
+    model = "logit", option = list(mle_solver = "NEWTON", newton_solver = "LU")
   )
   expect_true(are_all_close(
     coef(via_newton_qr_out), coef(via_newton_lu_out),
