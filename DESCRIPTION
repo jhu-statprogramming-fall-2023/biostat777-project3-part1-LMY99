@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Mingyuan", "Li", , "mli169@jh.edu", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: TBA
+Description: This package is part of the class assignments in 140.778: Statistical Computing, Algorithm, and Software Development taught by Dr.Aki Nishimura at BSPH. The package includes linear regression and logistic regression implemented through optimization in R and Cpp.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
