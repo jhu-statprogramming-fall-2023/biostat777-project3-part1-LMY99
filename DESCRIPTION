@@ -10,6 +10,8 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 LinkingTo: 
@@ -17,3 +19,5 @@ LinkingTo:
     RcppEigen
 Imports: 
     Rcpp
+VignetteBuilder: knitr
+URL: https://github.com/jhu-statprogramming-fall-2023/biostat777-project3-part1-LMY99/, https://jhu-statprogramming-fall-2023.github.io/biostat777-project3-part1-LMY99/index.html
