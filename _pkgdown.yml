@@ -11,6 +11,9 @@ template:
     code_font: {google: "JetBrains Mono"}
 navbar:
   structure:
-    left:  [intro, reference, articles, tutorials, news]
-    right: [search, github]
-
+    left:  [intro, reference, articles]
+    right: [github, search]
+home:
+  links:
+  - text: Personal site of Mingyuan Li
+    href: https://lmy99.github.io/biostat777-intro-Mingyuan-Li/
