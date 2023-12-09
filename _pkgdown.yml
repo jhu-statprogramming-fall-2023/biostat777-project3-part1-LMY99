@@ -1,4 +1,15 @@
 url: ~
 template:
   bootstrap: 5
-
+  bootswatch: lux
+  bslib:
+    pkgdown-nav-height: 100px
+    bg: "#B8BCC2"
+    fg: "#FFFFFF"
+    base_font: {google: "Roboto"}
+    heading_font: {google: "Roboto Slab"}
+    code_font: {google: "JetBrains Mono"}
+navbar:
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github]
