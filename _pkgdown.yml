@@ -5,7 +5,7 @@ template:
   bslib:
     pkgdown-nav-height: 100px
     bg: "#B8BCC2"
-    fg: "#FFFFFF"
+    fg: "#000000"
     base_font: {google: "Roboto"}
     heading_font: {google: "Roboto Slab"}
     code_font: {google: "JetBrains Mono"}
