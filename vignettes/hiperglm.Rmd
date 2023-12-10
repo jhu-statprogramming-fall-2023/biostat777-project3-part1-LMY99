@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(hiperglm)
+if(!require(tidyverse)) install.packages('tidyverse')
+library(tidyverse)
 ```
 
 # Introduction
@@ -54,7 +56,6 @@ cagefree <- read.csv('./data/cagefree.csv',row.names = 1)
 
 We first take a glance at the original data.
 ```{r}
-library(tidyverse)
 head(eggprod)
 attach(eggprod)
 table(eggprod$prod_type)
