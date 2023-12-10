@@ -16,6 +16,9 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(hiperglm)
+if(!'tidytuesdayR' %in% installed.packages()[,1])
+  install.packages('tidytuesdayR')
+library(tidytuesdayR)
 ```
 
 # Introduction
@@ -32,9 +35,6 @@ We aim to answer the question of how time and month of the year relates to the e
 We store the data in a folder named **data**(and create the data beforehand if it does not exist already), and download the data only if no file of the same name exists in the folder. 
 ```{r}
 if(!dir.exists('data')) system("mkdir data")
-if(!'tidytuesdayR' %in% installed.packages()[,1])
-  install.packages('tidytuesdayR')
-library(tidytuesdayR)
 tuesdata <- tidytuesdayR::tt_load(2023, week = 15)
 eggproduction <- tuesdata$`egg-production`
 cagefreepercentages <- tuesdata$`cage-free-percentages`
