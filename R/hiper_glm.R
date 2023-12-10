@@ -35,5 +35,6 @@ hiper_glm <- function(design, outcome, model = "linear", option = list()) {
       stop("MLE solver must be NEWTON or BFGS.")
     }
   }
+  names(hglm_out$coefficients) <- colnames(design)
   return(hglm_out)
 }
