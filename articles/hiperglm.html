@@ -78,8 +78,273 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhu-statprogramming-fall-2023/biostat777-project3-part1-LMY99/" class="external-link">hiperglm</a></span><span class="op">)</span></span></code></pre></div>
-  </main>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jhu-statprogramming-fall-2023/biostat777-project3-part1-LMY99/" class="external-link">hiperglm</a></span><span class="op">)</span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'tidyverse'</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: tidyverse</span></span>
+<span><span class="co">#&gt; Warning in library(package, lib.loc = lib.loc, character.only = TRUE,</span></span>
+<span><span class="co">#&gt; logical.return = TRUE, : there is no package called 'tidyverse'</span></span>
+<span><span class="co">#&gt; Installing package into '/home/runner/work/_temp/Library'</span></span>
+<span><span class="co">#&gt; (as 'lib' is unspecified)</span></span>
+<span><span class="co">#&gt; also installing the dependencies 'colorspace', 'bit', 'farver', 'labeling', 'munsell', 'RColorBrewer', 'viridisLite', 'rematch', 'bit64', 'backports', 'generics', 'blob', 'DBI', 'tidyselect', 'data.table', 'gtable', 'isoband', 'scales', 'gargle', 'uuid', 'cellranger', 'ids', 'cpp11', 'timechange', 'clipr', 'vroom', 'tzdb', 'progress', 'selectr', 'broom', 'conflicted', 'dbplyr', 'dplyr', 'dtplyr', 'forcats', 'ggplot2', 'googledrive', 'googlesheets4', 'haven', 'hms', 'lubridate', 'modelr', 'readr', 'readxl', 'reprex', 'rstudioapi', 'rvest', 'tidyr'</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; ── <span style="font-weight: bold;">Attaching core tidyverse packages</span> ──────────────────────── tidyverse 2.0.0 ──</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">dplyr    </span> 1.1.4     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">readr    </span> 2.1.4</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">forcats  </span> 1.0.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">stringr  </span> 1.5.1</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">ggplot2  </span> 3.4.4     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tibble   </span> 3.2.1</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">lubridate</span> 1.9.3     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tidyr    </span> 1.3.0</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">purrr    </span> 1.0.2</span></span>
+<span><span class="co">#&gt; ── <span style="font-weight: bold;">Conflicts</span> ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span> masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">lag()</span>    masks <span style="color: #0000BB;">stats</span>::lag()</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use the conflicted package (<span style="color: #0000BB; font-style: italic;">&lt;http://conflicted.r-lib.org/&gt;</span>) to force all conflicts to become errors</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>In this vignette, we give some examples on how to use the
+<strong>hiperglm</strong> package to perform linear regression on
+datasets.</p>
+<p>We use the US Egg Production Data from TidyTuesday. The data contains
+two data frames containing the production of eggs and hens over time as
+well as the proportion of cage-free eggs and hens in the United States,
+which originates from <strong>The Humane League</strong> website (url:
+<a href="https://thehumaneleague.org/article/E008R01-us-egg-production-data" class="external-link uri">https://thehumaneleague.org/article/E008R01-us-egg-production-data</a>,
+<a href="https://osf.io/z2gxn/" class="external-link uri">https://osf.io/z2gxn/</a>).
+The data dictionary can be found at the TidyTuesday Github repository <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-04-11/readme.md" class="external-link uri">https://github.com/rfordatascience/tidytuesday/blob/master/data/2023/2023-04-11/readme.md</a>.</p>
+<p>We aim to answer the question of how time and month of the year
+relates to the egg and hen production.</p>
+</div>
+<div class="section level2">
+<h2 id="downloading-the-data">Downloading the data<a class="anchor" aria-label="anchor" href="#downloading-the-data"></a>
+</h2>
+<p>We store the data in a folder named <strong>data</strong>(and create
+the data beforehand if it does not exist already), and download the data
+only if no file of the same name exists in the folder.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.exists</a></span><span class="op">(</span><span class="st">'data'</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/system.html" class="external-link">system</a></span><span class="op">(</span><span class="st">"mkdir data"</span><span class="op">)</span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="st">'tidytuesdayR'</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html" class="external-link">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'tidytuesdayR'</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">tidytuesdayR</span><span class="op">)</span></span>
+<span><span class="va">tuesdata</span> <span class="op">&lt;-</span> <span class="fu">tidytuesdayR</span><span class="fu">::</span><span class="fu">tt_load</span><span class="op">(</span><span class="fl">2023</span>, week <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
+<span><span class="va">eggproduction</span> <span class="op">&lt;-</span> <span class="va">tuesdata</span><span class="op">$</span><span class="va">`egg-production`</span></span>
+<span><span class="va">cagefreepercentages</span> <span class="op">&lt;-</span> <span class="va">tuesdata</span><span class="op">$</span><span class="va">`cage-free-percentages`</span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="st">'./data/eggprod.csv'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">eggproduction</span>,file<span class="op">=</span><span class="st">'./data/eggprod.csv'</span><span class="op">)</span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="st">'./data/cagefree.csv'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">cagefreepercentages</span>,file<span class="op">=</span><span class="st">'./data/cagefree.csv'</span><span class="op">)</span></span></code></pre></div>
+<p>Now we load the data from the downloaded file.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">eggprod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">'./data/eggprod.csv'</span>,row.names <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">cagefree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">'./data/cagefree.csv'</span>,row.names <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="data-wrangling-and-visualization">Data Wrangling and Visualization<a class="anchor" aria-label="anchor" href="#data-wrangling-and-visualization"></a>
+</h2>
+<p>We first take a glance at the original data.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">eggprod</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   observed_month     prod_type prod_process   n_hens     n_eggs</span></span>
+<span><span class="co">#&gt; 1     2016-07-31 hatching eggs          all 57975000 1147000000</span></span>
+<span><span class="co">#&gt; 2     2016-08-31 hatching eggs          all 57595000 1142700000</span></span>
+<span><span class="co">#&gt; 3     2016-09-30 hatching eggs          all 57161000 1093300000</span></span>
+<span><span class="co">#&gt; 4     2016-10-31 hatching eggs          all 56857000 1126700000</span></span>
+<span><span class="co">#&gt; 5     2016-11-30 hatching eggs          all 57116000 1096600000</span></span>
+<span><span class="co">#&gt; 6     2016-12-31 hatching eggs          all 57750000 1132900000</span></span>
+<span><span class="co">#&gt;                    source</span></span>
+<span><span class="co">#&gt; 1 ChicEggs-09-23-2016.pdf</span></span>
+<span><span class="co">#&gt; 2 ChicEggs-10-21-2016.pdf</span></span>
+<span><span class="co">#&gt; 3 ChicEggs-11-22-2016.pdf</span></span>
+<span><span class="co">#&gt; 4 ChicEggs-12-23-2016.pdf</span></span>
+<span><span class="co">#&gt; 5 ChicEggs-01-24-2017.pdf</span></span>
+<span><span class="co">#&gt; 6 ChicEggs-02-28-2017.pdf</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/attach.html" class="external-link">attach</a></span><span class="op">(</span><span class="va">eggprod</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">eggprod</span><span class="op">$</span><span class="va">prod_type</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; hatching eggs    table eggs </span></span>
+<span><span class="co">#&gt;            55           165</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">eggprod</span><span class="op">$</span><span class="va">prod_process</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                     all cage-free (non-organic)     cage-free (organic) </span></span>
+<span><span class="co">#&gt;                     110                      55                      55</span></span></code></pre></div>
+<p>We will need to extract the years and months of each entry for
+further analysis, and create dummy variables for the 12 possible
+values(1-12) of months. Also, since the file source of each entry is
+irrelevent data, we need to remove it. Also, we need to rescale the
+number of hens and eggs for better numerical representation and
+computation. We rescale number of hens to be in millions, and number of
+eggs to be in billions.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ep</span> <span class="op">&lt;-</span> <span class="va">eggprod</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">source</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>observed_month<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">observed_month</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>year<span class="op">=</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">observed_month</span><span class="op">)</span>, month<span class="op">=</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/month.html" class="external-link">month</a></span><span class="op">(</span><span class="va">observed_month</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>n_hens<span class="op">=</span><span class="va">n_hens</span><span class="op">/</span><span class="fl">1e6</span>, n_eggs<span class="op">=</span><span class="va">n_eggs</span><span class="op">/</span><span class="fl">1e9</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>prod_type<span class="op">=</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html" class="external-link">as_factor</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_sub.html" class="external-link">str_sub</a></span><span class="op">(</span><span class="va">prod_type</span>,<span class="fl">1</span>,<span class="op">-</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>process<span class="op">=</span><span class="va">prod_process</span><span class="op">)</span></span>
+<span><span class="va">ep</span> <span class="op">&lt;-</span> <span class="va">ep</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_dfc</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>,<span class="kw">function</span><span class="op">(</span><span class="va">i</span>,<span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">x</span><span class="op">==</span><span class="va">i</span><span class="op">)</span>,x<span class="op">=</span><span class="va">.</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html" class="external-link">set_names</a></span><span class="op">(</span>nm<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Month"</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">12</span>,sep<span class="op">=</span><span class="st">''</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">ep</span>, <span class="va">.</span><span class="op">)</span></span>
+<span><span class="co">#&gt; New names:</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...1`</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...2`</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...3`</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...4`</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...5`</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...6`</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...7`</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...8`</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...9`</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...10`</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...11`</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> `` -&gt; `...12`</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ep</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   observed_month prod_type process n_hens n_eggs year month Month1 Month2</span></span>
+<span><span class="co">#&gt; 1     2016-07-31  hatching     all 57.975 1.1470 2016     7      0      0</span></span>
+<span><span class="co">#&gt; 2     2016-08-31  hatching     all 57.595 1.1427 2016     8      0      0</span></span>
+<span><span class="co">#&gt; 3     2016-09-30  hatching     all 57.161 1.0933 2016     9      0      0</span></span>
+<span><span class="co">#&gt; 4     2016-10-31  hatching     all 56.857 1.1267 2016    10      0      0</span></span>
+<span><span class="co">#&gt; 5     2016-11-30  hatching     all 57.116 1.0966 2016    11      0      0</span></span>
+<span><span class="co">#&gt; 6     2016-12-31  hatching     all 57.750 1.1329 2016    12      0      0</span></span>
+<span><span class="co">#&gt;   Month3 Month4 Month5 Month6 Month7 Month8 Month9 Month10 Month11 Month12</span></span>
+<span><span class="co">#&gt; 1      0      0      0      0      1      0      0       0       0       0</span></span>
+<span><span class="co">#&gt; 2      0      0      0      0      0      1      0       0       0       0</span></span>
+<span><span class="co">#&gt; 3      0      0      0      0      0      0      1       0       0       0</span></span>
+<span><span class="co">#&gt; 4      0      0      0      0      0      0      0       1       0       0</span></span>
+<span><span class="co">#&gt; 5      0      0      0      0      0      0      0       0       1       0</span></span>
+<span><span class="co">#&gt; 6      0      0      0      0      0      0      0       0       0       1</span></span></code></pre></div>
+<p>Now we perform some visualization on the data.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="va">ep</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">observed_month</span>,y<span class="op">=</span><span class="va">n_hens</span>,group<span class="op">=</span><span class="va">process</span>,col<span class="op">=</span><span class="va">process</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span>cols<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">prod_type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Time"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Hen production(in millions)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title<span class="op">=</span><span class="st">"Number of hens produced over time"</span>,</span>
+<span>       subtitle<span class="op">=</span><span class="st">"Grouped over production process and type"</span>,</span>
+<span>       caption<span class="op">=</span><span class="st">"Data is collected monthly"</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">ep</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">observed_month</span>,y<span class="op">=</span><span class="va">n_eggs</span>,group<span class="op">=</span><span class="va">process</span>,col<span class="op">=</span><span class="va">process</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span>cols<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">prod_type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Time"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Egg production(in billions)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title<span class="op">=</span><span class="st">"Number of eggs produced over time"</span>,</span>
+<span>       subtitle<span class="op">=</span><span class="st">"Grouped over production process and type"</span>,</span>
+<span>       caption<span class="op">=</span><span class="st">"Data is collected monthly"</span><span class="op">)</span></span>
+<span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">ep</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">n_hens</span>,y<span class="op">=</span><span class="va">n_eggs</span>,col<span class="op">=</span><span class="va">process</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">n_hens</span>,y<span class="op">=</span><span class="va">n_eggs</span>,group<span class="op">=</span><span class="va">process</span>,col<span class="op">=</span><span class="va">process</span><span class="op">)</span>,</span>
+<span>              method<span class="op">=</span><span class="st">'loess'</span>,formula<span class="op">=</span><span class="st">'y~x'</span>,se<span class="op">=</span><span class="cn">FALSE</span>,linewidth<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_color_discrete</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Hen production(in millions)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Egg production(in billions)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title<span class="op">=</span><span class="st">"Relation of hen and egg production"</span>,</span>
+<span>       subtitle<span class="op">=</span><span class="st">"Grouped by production process"</span>,</span>
+<span>       caption<span class="op">=</span><span class="st">"Smoothing estimate included. Note that the different processes present similar patterns"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p1</span><span class="op">)</span></span></code></pre></div>
+<p><img src="hiperglm_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p2</span><span class="op">)</span></span></code></pre></div>
+<p><img src="hiperglm_files/figure-html/unnamed-chunk-6-2.png" width="700"></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p3</span><span class="op">)</span></span></code></pre></div>
+<p><img src="hiperglm_files/figure-html/unnamed-chunk-6-3.png" width="700">
+# Statistical Analysis</p>
+<p>For the sake of demonstration, we assume that the hens production is
+the sum of a linear function of year, indicator of process variable, and
+a monthly offset for each month of the year. The eggs production is
+assumed to be a linear function of time, month indicators, interaction
+of time and process, and hen production, to include the apparent
+relationship between hens and eggs production.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Fit the model on hen production</span></span>
+<span><span class="va">fm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"n_hens~year*process"</span>,<span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Month"</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">12</span>,sep<span class="op">=</span><span class="st">''</span><span class="op">)</span><span class="op">)</span>,collapse<span class="op">=</span><span class="st">"+"</span>,sep<span class="op">=</span><span class="st">''</span><span class="op">)</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">as.formula</a></span><span class="op">(</span><span class="va">fm</span><span class="op">)</span>,<span class="va">ep</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">ep</span><span class="op">$</span><span class="va">n_hens</span></span>
+<span><span class="co"># Solve using Pseudo-inverse Algorithm(by Cpp)</span></span>
+<span></span>
+<span><span class="va">hg_pinv</span> <span class="op">&lt;-</span> <span class="fu">hiper_glm</span><span class="op">(</span><span class="va">X</span>,<span class="va">y</span>,model<span class="op">=</span><span class="st">'linear'</span>,option<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>solver<span class="op">=</span><span class="st">'PINV'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Solve using R's OPTIM BFGS algorithm</span></span>
+<span></span>
+<span><span class="va">hg_bfgs</span> <span class="op">&lt;-</span> <span class="fu">hiper_glm</span><span class="op">(</span><span class="va">X</span>,<span class="va">y</span>,model<span class="op">=</span><span class="st">'linear'</span>,option<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>solver<span class="op">=</span><span class="st">'BFGS'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span>optim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">hg_bfgs</span><span class="op">)</span>,pinv<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">hg_pinv</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       (Intercept)     year processcage-free (non-organic)</span></span>
+<span><span class="co">#&gt; optim   -6531.011 3.330436                      -13962.04</span></span>
+<span><span class="co">#&gt; pinv    -6531.011 3.330436                      -13962.04</span></span>
+<span><span class="co">#&gt;       processcage-free (organic)    Month2   Month3  Month4   Month5    Month6</span></span>
+<span><span class="co">#&gt; optim                   5011.709 0.6696673 1.915809 2.06659 1.292653 0.7784028</span></span>
+<span><span class="co">#&gt; pinv                    5011.709 0.6696673 1.915809 2.06659 1.292653 0.7784028</span></span>
+<span><span class="co">#&gt;            Month7    Month8   Month9  Month10  Month11  Month12</span></span>
+<span><span class="co">#&gt; optim -0.08928915 0.3194181 1.157218 2.327693 3.320543 4.254143</span></span>
+<span><span class="co">#&gt; pinv  -0.08928915 0.3194181 1.157218 2.327693 3.320543 4.254143</span></span>
+<span><span class="co">#&gt;       year:processcage-free (non-organic) year:processcage-free (organic)</span></span>
+<span><span class="co">#&gt; optim                            6.843653                       -2.570826</span></span>
+<span><span class="co">#&gt; pinv                             6.843653                       -2.570826</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Fit the model on egg production</span></span>
+<span><span class="va">fm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"n_eggs~n_hens+year*process"</span>,<span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Month"</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">12</span>,sep<span class="op">=</span><span class="st">''</span><span class="op">)</span><span class="op">)</span>,collapse<span class="op">=</span><span class="st">"+"</span>,sep<span class="op">=</span><span class="st">''</span><span class="op">)</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">as.formula</a></span><span class="op">(</span><span class="va">fm</span><span class="op">)</span>,<span class="va">ep</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">ep</span><span class="op">$</span><span class="va">n_eggs</span></span>
+<span><span class="co"># Solve using Pseudo-inverse Algorithm(by Cpp)</span></span>
+<span></span>
+<span><span class="va">hg_pinv</span> <span class="op">&lt;-</span> <span class="fu">hiper_glm</span><span class="op">(</span><span class="va">X</span>,<span class="va">y</span>,model<span class="op">=</span><span class="st">'linear'</span>,option<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>solver<span class="op">=</span><span class="st">'PINV'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Solve using R's OPTIM BFGS algorithm</span></span>
+<span></span>
+<span><span class="va">hg_bfgs</span> <span class="op">&lt;-</span> <span class="fu">hiper_glm</span><span class="op">(</span><span class="va">X</span>,<span class="va">y</span>,model<span class="op">=</span><span class="st">'linear'</span>,option<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>solver<span class="op">=</span><span class="st">'BFGS'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span>optim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">hg_bfgs</span><span class="op">)</span>,pinv<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">hg_pinv</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       (Intercept)     n_hens       year processcage-free (non-organic)</span></span>
+<span><span class="co">#&gt; optim   -33.85306 0.02571353 0.01658583                       49.38086</span></span>
+<span><span class="co">#&gt; pinv    -33.85306 0.02571353 0.01658583                       49.38086</span></span>
+<span><span class="co">#&gt;       processcage-free (organic)     Month2      Month3     Month4      Month5</span></span>
+<span><span class="co">#&gt; optim                   15.76478 -0.2300121 -0.01209044 -0.1004244 -0.01609951</span></span>
+<span><span class="co">#&gt; pinv                    15.76478 -0.2300121 -0.01209044 -0.1004244 -0.01609951</span></span>
+<span><span class="co">#&gt;            Month6     Month7     Month8      Month9    Month10     Month11</span></span>
+<span><span class="co">#&gt; optim -0.08698348 0.02016305 0.02292961 -0.07435272 0.01843147 -0.05031164</span></span>
+<span><span class="co">#&gt; pinv  -0.08698348 0.02016305 0.02292961 -0.07435272 0.01843147 -0.05031164</span></span>
+<span><span class="co">#&gt;          Month12 year:processcage-free (non-organic)</span></span>
+<span><span class="co">#&gt; optim 0.02887029                         -0.02431212</span></span>
+<span><span class="co">#&gt; pinv  0.02887029                         -0.02431212</span></span>
+<span><span class="co">#&gt;       year:processcage-free (organic)</span></span>
+<span><span class="co">#&gt; optim                    -0.007623568</span></span>
+<span><span class="co">#&gt; pinv                     -0.007623568</span></span></code></pre></div>
+<p>We can see that PINV and BFGS gives the same result. However, we can
+do further tests to see the speed difference between these two
+methods.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">1e5</span>,<span class="fu">hiper_glm</span><span class="op">(</span><span class="va">X</span>,<span class="va">y</span>,model<span class="op">=</span><span class="st">'linear'</span>,option<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>solver<span class="op">=</span><span class="st">'PINV'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    user  system elapsed </span></span>
+<span><span class="co">#&gt;   4.502   0.010   4.514</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">1e5</span>,<span class="fu">hiper_glm</span><span class="op">(</span><span class="va">X</span>,<span class="va">y</span>,model<span class="op">=</span><span class="st">'linear'</span>,option<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>solver<span class="op">=</span><span class="st">'BFGS'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    user  system elapsed </span></span>
+<span><span class="co">#&gt;   4.296   0.000   4.296</span></span></code></pre></div>
+<p>We can see that pseudo-inverse is slightly faster than BFGS in linear
+model solving.</p>
+</div>
+<div class="section level2">
+<h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
+</h2>
+<p>The hens production increases by 3.3 millions per year, while egg
+production is positively related to both time and hen production, and
+within each year, April and December shows peak production given that
+other conditions are fixed. Non-organic cage-free production increases
+faster over time while organic cage-free production increases slower
+than overall production.</p>
+</div>
+<div class="section level2">
+<h2 id="functions-applied">Functions Applied<a class="anchor" aria-label="anchor" href="#functions-applied"></a>
+</h2>
+<p><strong>dplyr</strong>: mutate, select</p>
+<p><strong>lubridate</strong>: month, year</p>
+<p><strong>forcats</strong>: as_factor</p>
+<p><strong>stringr</strong>: str_sub</p>
+<p><strong>purrr</strong>: map_dfc, set_names</p>
+<p><strong>ggplot2</strong>: geom_line, geom_point, geom_smooth,
+facet_grid</p>
+<p><strong>hiperglm(package of interest)</strong>: hiper_glm,
+coef.hglm(S3 generic of hglm class, the output of hiper_glm)</p>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
