@@ -5,7 +5,6 @@ print.hglm <- function(hglm_out) {
   cat(paste("Solver:", hglm_out$solver))
   cat("Model Coefficients:\n")
   cat(hglm_out$coefficients)
-  warning("print.hglm not yet implemented.")
 }
 #' @export
 coef.hglm <- function(hglm_out) {
