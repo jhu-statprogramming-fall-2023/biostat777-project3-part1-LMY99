@@ -63,8 +63,28 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
-This package is part of the class assignments in 140.778: Statistical Computing, Algorithm, and Software Development taught by Dr.Aki Nishimura at BSPH. The package includes linear regression and logistic regression implemented through optimization in R and Cpp.
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="hiperglm-package">Hiperglm package<a class="anchor" aria-label="anchor" href="#hiperglm-package"></a>
+</h1></div>
+<p>Author: Mingyuan Li</p>
+<p>Description: This package is part of the class assignments in 140.778: Statistical Computing, Algorithm, and Software Development taught by Dr.Aki Nishimura at BSPH. The package includes linear regression and logistic regression implemented through optimization in R and Cpp.</p>
+<p>Exported Function: hiper_glm: Perform high-performance generalized linear model. Supports linear and logistic model, generates an S3 object of class “hglm”. print.hglm: S3 method of print, print useful information about an hglm object. coef.hglm: S3 method of coef, print the coefficients of an hglm object.</p>
+<p>Example:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span>,<span class="fl">100</span>,<span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
+<span><span class="fu">hiper_glm</span><span class="op">(</span><span class="va">X</span>,<span class="va">y</span>,model<span class="op">=</span><span class="st">'linear'</span><span class="op">)</span></span></code></pre></div>
+<p>URL to original Github Link: <a href="https://github.com/LMY99/hiperglm" class="external-link uri">https://github.com/LMY99/hiperglm</a></p>
+<p>URL to deployed website: <a href="https://jhu-statprogramming-fall-2023.github.io/biostat777-project3-part1-LMY99/" class="external-link uri">https://jhu-statprogramming-fall-2023.github.io/biostat777-project3-part1-LMY99/</a></p>
+<p>Website Customization:</p>
+<ul>
+<li>Uses LUX style</li>
+<li>Changes font</li>
+<li>Changes the background/foreground color</li>
+<li>Changes the navbar structure</li>
+<li>Adds a link to the personal website created in Project 1.</li>
+</ul>
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
